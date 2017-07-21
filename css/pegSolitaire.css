@@ -1,0 +1,11 @@
+circle[state=empty] {
+  stroke: black;
+  stroke-width: 2;
+  fill: red;
+}
+
+circle[state=occupied] {
+  stroke: black;
+  stroke-width: 2;
+  fill: blue;
+}
