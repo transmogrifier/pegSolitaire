@@ -58,7 +58,7 @@ Board.prototype = {
                   var cx = left + pitchX*curPeg.col;
                   var curCircle = $('<circle></circle>');
                   var pegState = curPeg.isEmpty ? 'empty':'occupied';
-                  var pegId = alphabet[curPeg.col] + curPeg.col.toString();
+                  var pegId = alphabet[curPeg.col] + curPeg.row.toString();
                   var txtId = pegId +'-txt';
                   svg.circle(cx,cy,radius,{id:pegId, state:pegState});
                   svg.text(cx,cy,pegId,
@@ -72,7 +72,7 @@ Board.prototype = {
     make_a_move: function(move){
         var result = "err: ";
         var alphabet = "abcdefghijklmnopqrstuvwxyz";
-        if ("string" === typeof move){
+        if ((typeof move) === "string"){
             var mPegs = move.split("-");
             var p1 = mPegs.shift().trim();
             p1 = p1.toLowerCase();
@@ -87,16 +87,23 @@ Board.prototype = {
                     //Check if a valid move can be made
                     var iRow = -1;
                     var iCol = -1;
-                    if ((peg1.row === peg2.row) &&
-                        (Math.abs(peg1.col - peg2.col) === 2)){
-                        iRow = peg1.row;
-                        iCol = (peg1.col + peg2.col)/2;
-                    } else if ((peg1.col === peg2.col) &&
-                               (Math.abs(peg1.row - peg2.row) === 2)){
-                        iRow = (peg1.row + peg2.row)/2;
-                        iCol = peg1.col;
-                    } else if ((Math.abs(peg1.col - peg2.col) === 2) &&
-                               (Math.abs(peg1.row - peg2.row) === 2)){
+                    // if ((peg1.row === peg2.row) &&
+                    //     (Math.abs(peg1.col - peg2.col) === 2)){
+                    //     iRow = peg1.row;
+                    //     iCol = (peg1.col + peg2.col)/2;
+                    // } else if ((peg1.col === peg2.col) &&
+                    //            (Math.abs(peg1.row - peg2.row) === 2)){
+                    //     iRow = (peg1.row + peg2.row)/2;
+                    //     iCol = peg1.col;
+                    // } else if ((Math.abs(peg1.col - peg2.col) === 2) &&
+                    //            (Math.abs(peg1.row - peg2.row) === 2)){
+                    //     iRow = (peg1.row + peg2.row)/2;
+                    //     iCol = (peg1.col + peg2.col)/2;
+                    // }
+                    if ((Math.abs(peg1.row - peg2.row) === 2 ||
+                        (peg1.row - peg2.row) === 0) &&
+                        (Math.abs(peg1.col - peg2.col) === 2 ||
+                            (peg1.col - peg2.col) === 0)){
                         iRow = (peg1.row + peg2.row)/2;
                         iCol = (peg1.col + peg2.col)/2;
                     }
@@ -128,7 +135,7 @@ Board.prototype = {
     get_peg_index: function(pegId){
         var alphabet = "abcdefghijklmnopqrstuvwxyz";
         var result = -1;
-        if (("string" === typeOf pegId) && pegId.length === 2){
+        if ((typeof pegId) === "string" && pegId.length === 2){
             var row = parseInt(pegId[1]);
             var col = alphabet.indexOf(pegId[0]);
             var pegIndex = (row*(row + 1)/2) + col;
@@ -146,21 +153,36 @@ Board.prototype = {
           pegTo < this.numPegs){
             var peg1 = this.pegs[pegFrom];
             var peg2 = this.pegs[pegTo];
-
       }
     }
 
 }
 
 $(document).ready( function(){
-  //Toggle rules when rules heading is clicked
-  $("#rules").on('click', function(){
-      console.log("Rules button clicked.");
-      $("#rulestext").toggle();
-  });
+    //Toggle rules when rules heading is clicked
+    $("#rules").on('click', function(){
+        console.log("Rules button clicked.");
+        $("#rulestext").toggle();
+    });
 
-  $("#new-game").on('click', function(){
-      var myBoard = new Board();
-      $("body").append(myBoard.html);
-  });
+    $("#new-game").on('click', function(){
+        var myBoard = new Board();
+        $("body").append(myBoard.html);
+        var label = $("<p></p>").text("Make a move: ");
+        var txtBox = $("<input></input>");
+        txtBox.attr("type","text");
+        txtBox.attr("name","moves-text");
+        txtBox.attr("id","moves-text")
+        var submitBtn = $("<button></button>");
+        submitBtn.attr("class","btn btn-primary");
+        submitBtn.attr("id", "submit-btn");
+        submitBtn.attr("type", "button");
+        submitBtn.text("Submit");
+        label.append(txtBox,submitBtn);
+        submitBtn.on('click', function(){
+            var thisMove = $("#moves-text").val();
+            alert(thisMove);
+        });
+        $("#game-board").append(label);
+    });
 });
