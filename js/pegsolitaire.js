@@ -164,6 +164,30 @@ Board.prototype = {
 
 var myBoard = new Board();
 
+function onClick(curIndex){
+    if (myBoard.moveFrom < 0){
+        myBoard.moveFrom = curIndex;
+    } else if (myBoard.moveTo < 0){
+        myBoard.moveTo = curIndex;
+        var res = myBoard.make_a_move();
+        // alert(res.msg);
+        if (res.status === "success"){
+          var mFrom = "#" + res.movedFrom;
+          var mTo = "#" + res.movedTo;
+          var remv = "#" + res.removed;
+          $(mFrom).attr("state", "empty");
+          $(mTo).attr("state", "occupied");
+          $(remv).attr("state", "empty");
+          var newMove = $("<span></span>");
+          newMove.text(res.msg);
+          $("#move-log").append($("<br />"));
+          $("#move-log").append(newMove);
+        }
+        myBoard.moveFrom = -1;
+        myBoard.moveTo = -1;
+    }
+}
+
 $(document).ready( function(){
     //Toggle rules when rules heading is clicked
     $("#rules").on('click', function(){
@@ -175,57 +199,12 @@ $(document).ready( function(){
         $("body").append(myBoard.html);
 
         $("circle").on('click', function(){
-            var curId = $(this).attr("id");
             var curIndex = $(this).attr("index");
-            // alert('Circle with index = ' + curIndex " was clicked.");
-            if (myBoard.moveFrom < 0){
-                myBoard.moveFrom = curIndex;
-            } else if (myBoard.moveTo < 0){
-                myBoard.moveTo = curIndex;
-                var res = myBoard.make_a_move();
-                // alert(res.msg);
-                if (res.status === "success"){
-                  var mFrom = "#" + res.movedFrom;
-                  var mTo = "#" + res.movedTo;
-                  var remv = "#" + res.removed;
-                  $(mFrom).attr("state", "empty");
-                  $(mTo).attr("state", "occupied");
-                  $(remv).attr("state", "empty");
-                  var newMove = $("<span></span>");
-                  newMove.text(res.msg);
-                  $("#move-log").append($("<br />"));
-                  $("#move-log").append(newMove);
-                }
-                myBoard.moveFrom = -1;
-                myBoard.moveTo = -1;
-            }
+            onClick(curIndex);
         });
         $("text").on('click', function(){
-            var curId = $(this).attr("id");
             var curIndex = $(this).attr("index");
-            // alert('Text with id = ' + curId + " was clicked.");
-            if (myBoard.moveFrom < 0){
-                myBoard.moveFrom = curIndex;
-            } else if (myBoard.moveTo < 0){
-                myBoard.moveTo = curIndex;
-                var res = myBoard.make_a_move();
-                // alert(res.msg);
-                if (res.status === "success"){
-
-                  var mFrom = "#" + res.movedFrom;
-                  var mTo = "#" + res.movedTo;
-                  var remv = "#" + res.removed;
-                  $(mFrom).attr("state", "empty");
-                  $(mTo).attr("state", "occupied");
-                  $(remv).attr("state", "empty");
-                  var newMove = $("<span></span>");
-                  newMove.text(res.msg);
-                  $("#move-log").append($("<br />"));
-                  $("#move-log").append(newMove);
-                }
-                myBoard.moveFrom = -1;
-                myBoard.moveTo = -1;
-            }
+            onClick(curIndex);
         });
 
     });
