@@ -12,7 +12,7 @@ function Board(){
     this.boardType = 'Triangle';
     this.numPegs = 0;
     this.pegs = this.getPegs();
-    this.html = this.make_html();
+    // this.html = this.make_html();
     this.moveFrom = -1;
     this.moveTo = -1;
 }
@@ -45,9 +45,9 @@ Board.prototype = {
     },
 
     make_html: function(){
-        var gameBoard = $("<div></div>"); //Create new div
-        gameBoard.attr("class", "container-fluid"); //Set Bootstrap class
-        gameBoard.attr("id","game-board"); //Set id
+        var gameBoard = $("#game-board"); //Get the game-board div
+        // gameBoard.attr("class", "container-fluid"); //Set Bootstrap class
+        // gameBoard.attr("id","game-board"); //Set id
         gameBoard.svg(); //Attach svg canvas
         var svg = gameBoard.svg("get"); //Get the svg canvas
         svg.configure({width: 200, height: 200}, false);
@@ -81,7 +81,7 @@ Board.prototype = {
         movesLog.attr("id", "move-log");
         movesLog.text("Moves:");
         gameBoard.append(movesLog);
-        return gameBoard;
+        // return gameBoard;
     },
 
     make_a_move: function(){
@@ -196,7 +196,8 @@ $(document).ready( function(){
     });
 
     $("#new-game").on('click', function(){
-        $("body").append(myBoard.html);
+        // $("body").append(myBoard.html);
+        myBoard.make_html();
 
         $("circle").on('click', function(){
             var curIndex = $(this).attr("index");
