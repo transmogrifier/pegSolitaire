@@ -1,25 +1,24 @@
 //Peg, has 2 coordinates and a state
 function Peg(row, col, id, index, isEmpty){
-  this.isEmpty = isEmpty;
-  this.row = row;
-  this.col = col;
-  this.id = id;
-  this.index = index;
+    this.isEmpty = isEmpty;
+    this.row = row;
+    this.col = col;
+    this.id = id;
+    this.index = index;
 }
 
 //Game board
 function Board(){
     this.boardType = 'Triangle';
     this.numPegs = 0;
-    this.pegs = this.getPegs();
-    // this.html = this.make_html();
+    this.pegs = [];
     this.moveFrom = -1;
     this.moveTo = -1;
 }
 
 Board.prototype = {
-    getPegs: function(){
-        pegs = [];
+    setPegs: function(){
+        this.pegs = [];
         var alphabet = 'abcdefghijklmnopqrstuvwxyz'
         switch(this.boardType){
             case 'Triangle':
@@ -31,31 +30,29 @@ Board.prototype = {
                     var index = (i*(i + 1)/2) + j;
                     if (i === 0 && j === 0){
                         //Set top corner as empty
-                        pegs.push(new Peg(i, j, id, index, true));
+                        this.pegs.push(new Peg(i, j, id, index, true));
                     } else{
                         //Set all other pegs as occupied
-                        pegs.push(new Peg(i, j, id, index, false));
+                        this.pegs.push(new Peg(i, j, id, index, false));
                     }
                     this.numPegs++;
                   }
                 }
                 break;
         }
-        return pegs;
+        return;
     },
 
     make_html: function(){
         var gameBoard = $("#game-board"); //Get the game-board div
-        // gameBoard.attr("class", "container-fluid"); //Set Bootstrap class
-        // gameBoard.attr("id","game-board"); //Set id
         gameBoard.svg(); //Attach svg canvas
         var svg = gameBoard.svg("get"); //Get the svg canvas
-        svg.configure({width: 200, height: 200}, false);
-
+        svg.configure({width: '63vw', height: '63vw', viewBox: '0 0 200 200'},
+                      true);
+        var grp = svg.group('theBoard');
         switch(this.boardType){
             case 'Triangle':
             default:
-                // var alphabet = 'abcdefghijklmnopqrstuvwxyz'
                 var pitchX = 40;
                 var pitchY = 25;
                 var radius = 10;
@@ -69,9 +66,9 @@ Board.prototype = {
                   var pegId = curPeg.id;
                   var txtId = pegId +'-txt';
                   var pegIndex = curPeg.index;
-                  svg.circle(cx,cy,radius,
+                  svg.circle(grp,cx,cy,radius,
                              {id:pegId, index: pegIndex, state:pegState});
-                  svg.text(cx,cy,pegId,
+                  svg.text(grp,cx,cy,pegId,
                            {id:txtId, index: pegIndex, state:pegState,
                             stroke:'white', textAnchor:'middle'});
                 }
@@ -81,7 +78,6 @@ Board.prototype = {
         movesLog.attr("id", "move-log");
         movesLog.text("Moves:");
         gameBoard.append(movesLog);
-        // return gameBoard;
     },
 
     make_a_move: function(){
@@ -134,35 +130,10 @@ Board.prototype = {
             result.msg = "Nothing selected."
         }
         return result;
-    },
-
-    get_peg_index: function(pegId){
-        var alphabet = "abcdefghijklmnopqrstuvwxyz";
-        var result = -1;
-        if ((typeof pegId) === "string" && pegId.length === 2){
-            var row = parseInt(pegId[1]);
-            var col = alphabet.indexOf(pegId[0]);
-            var pegIndex = (row*(row + 1)/2) + col;
-            if (pegIndex < this.numPegs){
-                result = pegIndex;
-            }
-        }
-        return result;
-    },
-
-    get_intermediate_peg_index: function(pegFrom, pegTo){
-      var alphabet = "abcdefghijklmnopqrstuvwxyz";
-      var result = -1;
-      if (pegFrom >= 0 && pegFrom < this.numPegs && pegTo >= 0 &&
-          pegTo < this.numPegs){
-            var peg1 = this.pegs[pegFrom];
-            var peg2 = this.pegs[pegTo];
-      }
     }
-
 }
 
-var myBoard = new Board();
+var myBoard = null;
 
 function onClick(curIndex){
     if (myBoard.moveFrom < 0){
@@ -170,7 +141,6 @@ function onClick(curIndex){
     } else if (myBoard.moveTo < 0){
         myBoard.moveTo = curIndex;
         var res = myBoard.make_a_move();
-        // alert(res.msg);
         if (res.status === "success"){
           var mFrom = "#" + res.movedFrom;
           var mTo = "#" + res.movedTo;
@@ -196,7 +166,8 @@ $(document).ready( function(){
     });
 
     $("#new-game").on('click', function(){
-        // $("body").append(myBoard.html);
+        myBoard = new Board();
+        myBoard.setPegs();
         myBoard.make_html();
 
         $("circle").on('click', function(){

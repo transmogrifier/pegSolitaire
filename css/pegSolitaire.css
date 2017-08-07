@@ -9,3 +9,7 @@ circle[state=occupied] {
   stroke-width: 2;
   fill: blue;
 }
+
+svg {
+  border: 1px solid black;
+}
