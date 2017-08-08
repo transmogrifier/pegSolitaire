@@ -47,19 +47,20 @@ Board.prototype = {
         var gameBoard = $("#game-board"); //Get the game-board div
         gameBoard.svg(); //Attach svg canvas
         var svg = gameBoard.svg("get"); //Get the svg canvas
-        svg.configure({width: '63vw', height: '63vw', viewBox: '0 0 200 200'},
-                      true);
+        //Inline svg will occupy container width, so no need to set width and
+        // height attributes here.
+        svg.configure({viewBox: '0 0 160 144'}, true);
         var grp = svg.group('theBoard');
         switch(this.boardType){
             case 'Triangle':
             default:
-                var pitchX = 40;
-                var pitchY = 25;
+                var pitchX = 30;
+                var pitchY = 26; //(pitchY/pitchX = sin(60deg))
                 var radius = 10;
                 for (i=0; i<this.numPegs; i++){
                   var curPeg = this.pegs[i];
-                  var left = 100 - 20*curPeg.row;
-                  var cy = 50 + pitchY*curPeg.row;
+                  var left = 80 - (pitchX/2)*curPeg.row;
+                  var cy = 20 + pitchY*curPeg.row;
                   var cx = left + pitchX*curPeg.col;
                   var curCircle = $('<circle></circle>');
                   var pegState = curPeg.isEmpty ? 'empty':'occupied';
