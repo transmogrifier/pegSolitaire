@@ -1,0 +1,31 @@
+{
+  "name": "pegsolitaire",
+  "version": "1.0.0",
+  "description": "Peg Solitaire Game",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/transmogrifier/pegSolitaire.git"
+  },
+  "keywords": [
+    "peg_solitaire",
+    "solitaire",
+    "game",
+    "javascript",
+    "jQuery",
+    "svg"
+  ],
+  "author": "Sameer Marathe",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/transmogrifier/pegSolitaire/issues"
+  },
+  "homepage": "https://github.com/transmogrifier/pegSolitaire#readme",
+  "devDependencies": {
+    "eslint": "^5.14.0",
+    "eslint-config-google": "^0.12.0"
+  }
+}
