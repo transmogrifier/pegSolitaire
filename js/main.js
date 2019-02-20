@@ -1,9 +1,8 @@
 let myBoard = null;
 
-/** Event handler for click event on the pegs
-* @param {number} curIndex Index of the peg that was clicked
-*/
-function onClick(curIndex) {
+/** Event handler for click event on the pegs */
+function onClickCircleText() {
+  const curIndex = $(this).attr('index');
   if (myBoard.moveFrom < 0) {
     myBoard.moveFrom = curIndex;
   } else if (myBoard.moveTo < 0) {
@@ -24,6 +23,7 @@ function onClick(curIndex) {
     myBoard.moveFrom = -1;
     myBoard.moveTo = -1;
   }
+  return;
 }
 
 /** Event handler for document ready event
@@ -41,13 +41,8 @@ $(document).ready( function() {
     myBoard.setPegs();
     myBoard.makeHtml();
 
-    $('circle').on('click', function() {
-      const curIndex = $(this).attr('index');
-      onClick(curIndex);
-    });
-    $('text').on('click', function() {
-      const curIndex = $(this).attr('index');
-      onClick(curIndex);
-    });
+    $('circle').on('click', onClickCircleText);
+
+    $('text').on('click', onClickCircleText);
   });
 });
