@@ -8,7 +8,7 @@ function onClick(curIndex) {
     myBoard.moveFrom = curIndex;
   } else if (myBoard.moveTo < 0) {
     myBoard.moveTo = curIndex;
-    const res = myBoard.make_a_move();
+    const res = myBoard.makeMove();
     if (res.status === 'success') {
       const mFrom = '#' + res.movedFrom;
       const mTo = '#' + res.movedTo;
@@ -36,9 +36,10 @@ $(document).ready( function() {
   });
 
   $('#new-game').on('click', function() {
+    console.log('New game button clicked.');
     myBoard = new Board();
     myBoard.setPegs();
-    myBoard.make_html();
+    myBoard.makeHtml();
 
     $('circle').on('click', function() {
       const curIndex = $(this).attr('index');

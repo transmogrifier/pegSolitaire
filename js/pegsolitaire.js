@@ -1,38 +1,42 @@
-/** Constructor function for Peg
- * @param {number} row Row number of the peg
- * @param {number} col Column number of the peg
- * @param {string} id  ID of the peg
- * @param {number} index Index number of the peg
- * @param {bool} isEmpty Is the peg empty
-*/
-function Peg(row, col, id, index, isEmpty) {
-  this.isEmpty = isEmpty;
-  this.row = row;
-  this.col = col;
-  this.id = id;
-  this.index = index;
-}
-
-/** Constructor function for Board */
-function Board() {
-  this.boardType = 'Triangle';
-  this.numPegs = 0;
-  this.pegs = [];
-  this.moveFrom = -1;
-  this.moveTo = -1;
+/** Peg class */
+class Peg {
+  /** Constructor function for Peg
+   * @param {number} row Row number of the peg
+   * @param {number} col Column number of the peg
+   * @param {string} id  ID of the peg
+   * @param {number} index Index number of the peg
+   * @param {bool} isEmpty Is the peg empty
+  */
+  constructor(row, col, id, index, isEmpty) {
+    this.isEmpty = isEmpty;
+    this.row = row;
+    this.col = col;
+    this.id = id;
+    this.index = index;
+  }
 }
 
 /** Board class */
-Board.prototype = {
-  setPegs: function() {
+class Board {
+  /** Constructor for Board class */
+  constructor() {
+    this.boardType = 'Triangle';
+    this.numPegs = 0;
+    this.pegs = [];
+    this.moveFrom = -1;
+    this.moveTo = -1;
+  }
+
+  /** Sets the Pegs when the board is instantiated */
+  setPegs() {
     this.pegs = [];
     const alphabet = 'abcdefghijklmnopqrstuvwxyz';
     switch (this.boardType) {
       case 'Triangle':
       default:
         // Defines a triangular board with 5 pegs per side
-        for (i = 0; i < 5; i++) {
-          for (j = 0; j <= i; j++) {
+        for (let i = 0; i < 5; i++) {
+          for (let j = 0; j <= i; j++) {
             const id = alphabet[j] + i.toString();
             const index = (i*(i + 1)/2) + j;
             if (i === 0 && j === 0) {
@@ -48,9 +52,10 @@ Board.prototype = {
         break;
     }
     return;
-  },
+  }
 
-  make_html: function() {
+  /** Render the HTML for the board */
+  makeHtml() {
     const gameBoard = $('#game-board'); // Get the game-board div
     gameBoard.svg(); // Attach svg canvas
     const svg = gameBoard.svg('get'); // Get the svg canvas
@@ -64,7 +69,7 @@ Board.prototype = {
         const pitchX = 30;
         const pitchY = 26; // (pitchY/pitchX = sin(60deg))
         const radius = 10;
-        for (i=0; i<this.numPegs; i++) {
+        for (let i=0; i<this.numPegs; i++) {
           const curPeg = this.pegs[i];
           const left = 80 - (pitchX/2)*curPeg.row;
           const cy = 20 + pitchY*curPeg.row;
@@ -86,9 +91,12 @@ Board.prototype = {
     movesLog.attr('id', 'move-log');
     movesLog.text('Moves:');
     gameBoard.append(movesLog);
-  },
+  }
 
-  make_a_move: function() {
+  /** Make a move.
+  * @return {object} result Result of the move with status
+  */
+  makeMove() {
     const result =
     {
       movedFrom: '',
@@ -145,5 +153,6 @@ Board.prototype = {
       result.msg = 'Nothing selected.';
     }
     return result;
-  },
-};
+  }
+}
+
